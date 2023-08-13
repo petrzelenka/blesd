@@ -1,0 +1,21 @@
+[package]
+name = "blesd"
+description = "Command-line tool for discovering services and characteristics provided by Bluetooth LE peripheral devices"
+version = "1.0.0"
+authors = ["Petr Zelenka <petr.zelenka@sellcom.org>"]
+edition = "2021"
+
+[dependencies]
+btleplug = "0.11.0"
+clap = { version = "4.3.19", features = ["derive"] }
+colored = "2.0.4"
+phf = { version = "0.11.2", features = ["macros"] }
+tabled = "0.14.0"
+tokio = { version = "1.29.1", features = ["full"] }
+uuid = "1.4.1"
+
+[profile.release]
+codegen-units = 1
+lto = true
+panic = "abort"
+strip = true
