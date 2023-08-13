@@ -208,7 +208,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
 			let peripherals = adapter.peripherals().await?;
 			if peripherals.is_empty() {
-				eprint!("{}", "done:".green());
+				eprint!("{}", "done: ".green());
 				eprintln!("no peripheral devices found");
 				exit(0);
 			}
