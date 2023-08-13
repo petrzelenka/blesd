@@ -61,8 +61,8 @@ enum Command {
 	/// Discover services provided by a peripheral device
 	Discover {
 		#[arg()]
-		/// Address of the peripheral device
-		address: String,
+		/// Identifier (UUID on macOS, MAC address on other systems) of the peripheral device
+		device_id: String,
 
 		#[arg(long, short = 't', default_value_t = DEFAULT_SCAN_TIME)]
 		/// Scan time in seconds
@@ -72,7 +72,7 @@ enum Command {
 	/// Scan for peripheral devices
 	Scan {
 		#[arg(long, short = 'r', default_value_t = false)]
-		/// Sort devices by RSSI (strongest to weakest) instead of by address
+		/// Sort devices by RSSI (strongest to weakest) instead of by identifier
 		sort_by_rssi: bool,
 
 		#[arg(long, short = 't', default_value_t = DEFAULT_SCAN_TIME)]
@@ -91,7 +91,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 	let args = Args::parse();
 
 	match &args.command {
-		Command::Discover { address, scan_time } => {
+		Command::Discover { device_id, scan_time } => {
 			let adapters = Manager::new().await?.adapters().await?;
 			if adapters.is_empty() {
 				eprint!("{}", "error: ".red());
@@ -115,10 +115,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
 			adapter.stop_scan().await?;
 
 			let peripheral = adapter.peripherals().await?.into_iter()
-				.find(|peripheral| peripheral.address().to_string() == *address)
+				.find(|peripheral| peripheral.id().to_string() == *device_id)
 				.unwrap_or_else(|| {
 					eprint!("{}", "error: ".red());
-					eprintln!("no peripheral device with address '{}' found", address.yellow());
+					eprintln!("no peripheral device with identifier '{}' found", device_id.yellow());
 					exit(0);
 				});
 
@@ -173,8 +173,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
 			}
 
 			let mut device: Vec<String> = Vec::new();
-			device.push(format!("address: {}\n{}",
-				peripheral.address(),
+			device.push(format!("identifier: {}\n{}",
+				peripheral.id(),
 				format_subitems(services, "SERVICE")
 			));
 
@@ -219,7 +219,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 				match properties {
 					Some(properties) => {
 						descriptors.push(PeripheralDeviceDescriptor::new(
-							properties.address,
+							peripheral.id(),
 							properties.rssi,
 							properties.local_name,
 							find_manufacturer(properties.manufacturer_data)
@@ -227,7 +227,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 					},
 					None => {
 						descriptors.push(PeripheralDeviceDescriptor::new(
-							peripheral.address(),
+							peripheral.id(),
 							None,
 							None,
 							None
@@ -241,7 +241,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 					latter.rssi.cmp(&former.rssi));
 			} else {
 				descriptors.sort_by(|former, latter|
-					former.address.cmp(&latter.address));
+					former.device_id.cmp(&latter.device_id));
 			}
 
 			println!("\n{}", Table::new(descriptors)
