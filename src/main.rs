@@ -61,7 +61,7 @@ enum Command {
 	/// Discover services provided by a peripheral device
 	Discover {
 		#[arg()]
-		/// Identifier (UUID on macOS, MAC address on other systems) of the peripheral device
+		/// Identifier of the peripheral device
 		device_id: String,
 
 		#[arg(long, short = 't', default_value_t = DEFAULT_SCAN_TIME)]

@@ -26,7 +26,7 @@ const BASE_UUID_MASK: u128 = 0x0000_0000_0000_1000_8000_0080_5F9B_34FB_u128;
 #[tabled(rename_all = "UPPERCASE")]
 pub struct PeripheralDeviceDescriptor {
 
-	#[tabled(rename = "IDENTIFIER (UUID / MAC ADDRESS)")]
+	#[tabled(rename = "IDENTIFIER")]
 	pub device_id: PeripheralId,
 
 	#[tabled(rename = "RSSI [dBm]")]
