@@ -1,13 +1,13 @@
 # blesd
 
 [![License](https://img.shields.io/github/license/petrzelenka/blesd)](LICENSE)
-[![Latest release](https://img.shields.io/github/v/release/petrzelenka/blesd)](releases)
+[![Latest release](https://img.shields.io/github/v/release/petrzelenka/blesd)](https://github.com/petrzelenka/blesd/releases)
 
 Blesd is a command-line tool for discovering services and characteristics provided by Bluetooth LE peripheral devices.
 
 ## Installation
 
-[Releases](releases) contain precompiled binaries for Windows (x86_64) and macOS (AArch64).
+[Releases](https://github.com/petrzelenka/blesd/releases) contain precompiled binaries for Windows (x86_64) and macOS (AArch64).
 Just extract the binary from the respective archive and place it on `PATH`.
 
 ## Usage
